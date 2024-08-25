@@ -28,7 +28,7 @@ public class Event {
     @NotBlank(message = "Name is required")
     @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
     private String name;
-    
+
     @ElementCollection
     @CollectionTable(name = "event_categories", joinColumns = @JoinColumn(name = "event_id"))
     @Builder.Default

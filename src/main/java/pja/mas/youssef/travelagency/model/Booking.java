@@ -77,10 +77,10 @@ public class Booking {
         DRAFT, REQUEST, PROCESSING, PROCESSED, CONFIRMED, CANCELLED, BOOKED
     }
 
-    public static abstract class BookingBuilder {
+    public static class BookingBuilder {
         public BookingBuilder isPrivateBusIncluded(Boolean isPrivateBusIncluded) {
-            if (this.customer == null) {
-                throw new IllegalStateException("Customer must be set before setting isPrivateBusIncluded");
+            if (isPrivateBusIncluded && this.customer == null) {
+                throw new IllegalStateException("Customer must be set before setting isPrivateBusIncluded to True");
             }
             _validatePrivateBusInclusion(this.customer, isPrivateBusIncluded);
             this.isPrivateBusIncluded = isPrivateBusIncluded;

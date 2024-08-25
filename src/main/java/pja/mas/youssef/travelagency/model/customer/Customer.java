@@ -2,6 +2,7 @@ package pja.mas.youssef.travelagency.model.customer;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -28,7 +29,7 @@ public abstract class Customer {
     @EqualsAndHashCode.Exclude
     private Set<Booking> bookings = new HashSet<>();
 
-    @NotBlank(message = "isVIP is required")
+    @NotNull(message = "isVIP is required")
     private Boolean isVIP;
 
     @NotBlank(message = "Email is required")

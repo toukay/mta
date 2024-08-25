@@ -2,6 +2,8 @@ package pja.mas.youssef.travelagency.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -33,6 +35,7 @@ public class Accommodation {
     @Size(min = 3, max = 255, message = "Address must be between 3 and 255 characters")
     private String address;
 
-    @NotBlank(message = "Price per night is required")
+    @NotNull(message = "Price per night is required")
+    @Positive(message = "Price per night must be positive")
     private Double pricePerNight;
 }

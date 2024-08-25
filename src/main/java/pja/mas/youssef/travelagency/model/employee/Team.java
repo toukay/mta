@@ -50,7 +50,7 @@ public class Team {
     @NotBlank(message = "Description is required")
     private String description;
 
-    public static abstract class TeamBuilder {
+    public static class TeamBuilder {
         private Set<Agent> agents = new HashSet<>();
 
         private Set<Agent> managers = new HashSet<>();
