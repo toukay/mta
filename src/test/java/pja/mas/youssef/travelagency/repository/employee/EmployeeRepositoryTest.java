@@ -35,6 +35,7 @@ class EmployeeRepositoryTest {
     @BeforeEach
     public void initData() {
         a1 = Agent.builder()
+                .name("Agent 1")
                 .firstName("John")
                 .lastName("Lukas")
                 .branchAddress("Branch 1")

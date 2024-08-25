@@ -34,6 +34,10 @@ public class Agent extends Employee {
     @EqualsAndHashCode.Exclude
     private Set<Team> managedTeams = new HashSet<>();
 
+    @NotBlank(message = "Name is required")
+    @Size(min = 3, max = 50, message = "Name must be between 3 and 50 characters")
+    private String name;
+
     @NotNull(message = "Specialization is required")
     private Specialization specialization;
 

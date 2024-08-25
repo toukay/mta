@@ -24,7 +24,7 @@ class TeamRepositoryTest {
     public void initData() {
         t1 = Team.builder()
                 .name("Team 1")
-                .description("Team 1 description")
+                .description("Description 1")
                 .build();
     }
 
