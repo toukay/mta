@@ -18,8 +18,8 @@ import java.util.Set;
 @Builder
 @ToString
 public class Booking {
-    private static double bookingFee = 100;
-    private static double extraServiceFee = 50;
+    private static double BOOKING_FEE = 100;
+    private static double EXTRA_SERVICE_FEE = 50;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -77,14 +77,46 @@ public class Booking {
         DRAFT, REQUEST, PROCESSING, PROCESSED, CONFIRMED, CANCELLED, BOOKED
     }
 
+    public static abstract class BookingBuilder {
+        public BookingBuilder isPrivateBusIncluded(Boolean isPrivateBusIncluded) {
+            if (this.customer == null) {
+                throw new IllegalStateException("Customer must be set before setting isPrivateBusIncluded");
+            }
+            _validatePrivateBusInclusion(this.customer, isPrivateBusIncluded);
+            this.isPrivateBusIncluded = isPrivateBusIncluded;
+            return this;
+        }
+    }
+
+    public void setIsPrivateBusIncluded(Boolean isPrivateBusIncluded) {
+        _validatePrivateBusInclusion(this.customer, isPrivateBusIncluded);
+        this.isPrivateBusIncluded = isPrivateBusIncluded;
+    }
+
+    private static void _validatePrivateBusInclusion(Customer customer, Boolean isPrivateBusIncluded) {
+        if (isPrivateBusIncluded != null && isPrivateBusIncluded && !customer.getIsVIP()) {
+            throw new IllegalArgumentException("Only VIP customers can have private bus included");
+        }
+    }
+
     public Double getTotalPrice() {
-        double totalPrice = bookingFee;
+        double totalPrice = BOOKING_FEE;
         if (isTravelInsuranceIncluded)
-            totalPrice += extraServiceFee;
+            totalPrice += EXTRA_SERVICE_FEE;
         if (isPrivateBusIncluded)
-            totalPrice += extraServiceFee;
+            totalPrice += EXTRA_SERVICE_FEE;
         if (isMealsIncluded)
-            totalPrice += extraServiceFee;
+            totalPrice += EXTRA_SERVICE_FEE;
+
+        totalPrice += tour.getPricePerSeat() * numberOfPeople;
+
+        for (BookingAccommodation bookingAccommodation : bookingAccommodations) {
+            totalPrice += bookingAccommodation.getTotalPrice();
+        }
+
+        for (TravelTicket travelTicket : travelTickets) {
+            totalPrice += travelTicket.getPrice();
+        }
 
         return totalPrice;
     }

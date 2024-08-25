@@ -47,4 +47,11 @@ public class Event {
     public enum Category {
         SOCIAL, CULTURE, OTHER
     }
+
+    public Set<String> getActivities() {
+        Set<String> activities = new HashSet<>();
+        activities.addAll(attractions);
+        activities.addAll(guests);
+        return activities;
+    }
 }

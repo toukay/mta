@@ -39,6 +39,12 @@ public class Tour {
     @EqualsAndHashCode.Exclude
     private Map<Guide.Role, TourGuide> tourGuides = new EnumMap<>(Guide.Role.class);
 
+    @OneToMany(mappedBy = "tour", fetch = FetchType.LAZY)
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Set<TourBus> tourBuses = new HashSet<>();
+
     @NotBlank(message = "Name is required")
     private String destination;
 

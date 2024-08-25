@@ -40,4 +40,8 @@ public class BookingAccommodation {
     public int getNumberOfNights() {
         return (int) (checkOutDate.toEpochDay() - checkInDate.toEpochDay());
     }
+
+    public double getTotalPrice() {
+        return getNumberOfNights() * accommodation.getPricePerNight();
+    }
 }

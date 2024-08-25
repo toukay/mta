@@ -18,11 +18,6 @@ import java.util.Set;
 @SuperBuilder
 @ToString(callSuper = true)
 public class Guide extends Employee {
-//    @ManyToOne
-//    @JoinColumn(name = "tour_id")
-//    @ToString.Exclude
-//    @EqualsAndHashCode.Exclude
-//    private Tour tour;
 
     @OneToMany(mappedBy = "guide", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -43,7 +38,11 @@ public class Guide extends Employee {
         LEADER, HISTORIAN, TRANSLATOR, ENTERTAINER
     }
 
-    public void UpdateCurrentTourActivity() {
-        // TODO implement here
+    public void UpdateCurrentTourActivity(Tour tour, String activity) {
+        if (tourGuides.stream().noneMatch(tourGuide -> tourGuide.getTour().equals(tour))) {
+            throw new IllegalArgumentException("This guide is not assigned to this tour");
+        }
+
+        tour.setCurrentTourActivity(activity);
     }
 }

@@ -23,6 +23,8 @@ class BookingRepositoryTest {
     @BeforeEach
     public void initData() {
         b1 = Booking.builder()
+                .bookingDate(java.time.LocalDateTime.now())
+                .status(Booking.Status.DRAFT)
                 .build();
     }
 
