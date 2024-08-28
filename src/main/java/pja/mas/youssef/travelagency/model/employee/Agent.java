@@ -1,5 +1,6 @@
 package pja.mas.youssef.travelagency.model.employee;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;

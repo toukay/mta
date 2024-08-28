@@ -10,15 +10,16 @@ import pja.mas.youssef.travelagency.model.*;
 import pja.mas.youssef.travelagency.model.customer.Company;
 import pja.mas.youssef.travelagency.model.customer.Individual;
 import pja.mas.youssef.travelagency.model.employee.Agent;
+import pja.mas.youssef.travelagency.model.employee.Guide;
 import pja.mas.youssef.travelagency.repository.*;
 import pja.mas.youssef.travelagency.repository.customer.CompanyRepository;
 import pja.mas.youssef.travelagency.repository.customer.IndividualRepository;
 import pja.mas.youssef.travelagency.repository.employee.AgentRepository;
+import pja.mas.youssef.travelagency.repository.employee.GuideRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,10 +30,12 @@ public class DataInitializer {
     private final IndividualRepository individualRepository;
     private final CompanyRepository companyRepository;
     private final AgentRepository agentRepository;
+    private final GuideRepository guideRepository;
     private final TourRepository tourRepository;
     private final BookingRepository bookingRepository;
     private final AccommodationRepository accommodationRepository;
     private final TravelTicketRepository travelTicketRepository;
+    private final EventRepository eventRepository;
 
     private final Random random = new Random();
 
@@ -68,13 +71,36 @@ public class DataInitializer {
         );
         agentRepository.saveAll(agents);
 
-        // Create Tours
+        // Create Guides
+        List<Guide> guides = List.of(
+                createGuide("James", "Smith", Set.of("English", "French"), Guide.Role.LEADER),
+                createGuide("Emma", "Johnson", Set.of("English", "French"), Guide.Role.LEADER),
+                createGuide("Liam", "Brown", Set.of("English", "Spanish"), Guide.Role.HISTORIAN),
+                createGuide("Sophia", "Garcia", Set.of("English", "Spanish", "Italian"), Guide.Role.TRANSLATOR),
+                createGuide("Noah", "Martinez", Set.of("English", "Portuguese"), Guide.Role.ENTERTAINER),
+                createGuide("Olivia", "Taylor", Set.of("English", "German"), Guide.Role.LEADER),
+                createGuide("Ethan", "Anderson", Set.of("English", "Mandarin"), Guide.Role.TRANSLATOR),
+                createGuide("Ava", "Thomas", Set.of("English", "Arabic"), Guide.Role.HISTORIAN),
+                createGuide("Mason", "Jackson", Set.of("English", "Russian"), Guide.Role.ENTERTAINER)
+        );
+        guideRepository.saveAll(guides);
+
+        // Create Tours with Guides
         List<Tour> tours = List.of(
-                createTour("Paris Getaway", 1000.0, LocalDateTime.now().plusMonths(1), LocalDateTime.now().plusMonths(1).plusDays(7)),
-                createTour("Tokyo Adventure", 1500.0, LocalDateTime.now().plusMonths(2), LocalDateTime.now().plusMonths(2).plusDays(10)),
-                createTour("New York City Tour", 1200.0, LocalDateTime.now().plusMonths(3), LocalDateTime.now().plusMonths(3).plusDays(5))
+                createTourWithGuides("Paris Getaway", 1000.0, LocalDateTime.now().plusMonths(1), LocalDateTime.now().plusMonths(1).plusDays(7), List.of(guides.get(0), guides.get(2))),
+                createTourWithGuides("Tokyo Adventure", 1500.0, LocalDateTime.now().plusMonths(2), LocalDateTime.now().plusMonths(2).plusDays(10), List.of(guides.get(1), guides.get(3), guides.get(4))),
+                createTourWithGuides("New York City Tour", 1200.0, LocalDateTime.now().plusMonths(3), LocalDateTime.now().plusMonths(3).plusDays(5), List.of(guides.get(5), guides.get(6))),
+                createTourWithGuides("African Safari", 2000.0, LocalDateTime.now().plusMonths(4), LocalDateTime.now().plusMonths(4).plusDays(14), List.of(guides.get(0), guides.get(7), guides.get(8))),
+                createTourWithGuides("Australian Outback", 1800.0, LocalDateTime.now().plusMonths(5), LocalDateTime.now().plusMonths(5).plusDays(12), List.of(guides.get(1), guides.get(3), guides.get(4))),
+                createTourWithGuides("Mediterranean Cruise", 2200.0, LocalDateTime.now().plusMonths(6), LocalDateTime.now().plusMonths(6).plusDays(15), List.of(guides.get(2), guides.get(5), guides.get(6))),
+                createTourWithGuides("South American Adventure", 1900.0, LocalDateTime.now().plusMonths(7), LocalDateTime.now().plusMonths(7).plusDays(13), List.of(guides.get(0), guides.get(7), guides.get(8)))
         );
         tourRepository.saveAll(tours);
+
+        // Create Events and associate with Tours
+        for (Tour tour : tours) {
+            createEventsForTour(tour);
+        }
 
         // Create Accommodations
         List<Accommodation> accommodations = List.of(
@@ -142,6 +168,16 @@ public class DataInitializer {
                 .build();
     }
 
+    private Guide createGuide(String firstName, String lastName, Set<String> languages, Guide.Role role) {
+        return Guide.builder()
+                .firstName(firstName)
+                .lastName(lastName)
+                .branchAddress("123 Guide St")
+                .languages(languages)
+                .role(role)
+                .build();
+    }
+
     private Accommodation createAccommodation(String name, String address, Double pricePerNight) {
         return Accommodation.builder()
                 .name(name)
@@ -186,5 +222,80 @@ public class DataInitializer {
 
     private <T> T getRandomElement(List<T> list) {
         return list.get(random.nextInt(list.size()));
+    }
+
+    private void createEventsForTour(Tour tour) {
+        List<Event> events = new ArrayList<>();
+        int numberOfEvents = random.nextInt(3, 6);  // Create 3-5 events per tour
+
+        for (int i = 0; i < numberOfEvents; i++) {
+            Event event = createEvent(tour);
+            events.add(event);
+        }
+
+        eventRepository.saveAll(events);
+        tour.getEvents().addAll(events);
+        tourRepository.save(tour);
+    }
+
+    private Event createEvent(Tour tour) {
+        String[] eventNames = {"City Tour", "Museum Visit", "Local Cuisine Tasting", "Historical Site Exploration", "Cultural Performance", "Nature Hike", "Wine Tasting", "Art Gallery Tour"};
+        String[] attractions = {"Eiffel Tower", "Louvre Museum", "Notre-Dame Cathedral", "Tokyo Tower", "Sensoji Temple", "Statue of Liberty", "Central Park", "Serengeti National Park", "Sydney Opera House"};
+        String[] guests = {"Local Guide", "Historian", "Chef", "Artist", "Musician", "Naturalist", "Sommelier"};
+
+        Set<Event.Category> categories = new HashSet<>();
+        categories.add(Event.Category.values()[random.nextInt(Event.Category.values().length)]);
+        if (random.nextBoolean()) {
+            categories.add(Event.Category.values()[random.nextInt(Event.Category.values().length)]);
+        }
+
+        Set<String> eventAttractions = new HashSet<>();
+        eventAttractions.add(attractions[random.nextInt(attractions.length)]);
+        if (random.nextBoolean()) {
+            eventAttractions.add(attractions[random.nextInt(attractions.length)]);
+        }
+
+        Set<String> eventGuests = new HashSet<>();
+        eventGuests.add(guests[random.nextInt(guests.length)]);
+        if (random.nextBoolean()) {
+            eventGuests.add(guests[random.nextInt(guests.length)]);
+        }
+
+        return Event.builder()
+                .tour(tour)
+                .name(eventNames[random.nextInt(eventNames.length)])
+                .categories(categories)
+                .attractions(eventAttractions)
+                .guests(eventGuests)
+                .build();
+    }
+
+    private Tour createTourWithGuides(String destination, Double pricePerSeat, LocalDateTime startDate, LocalDateTime endDate, List<Guide> availableGuides) {
+        Tour tour = Tour.builder()
+                .destination(destination)
+                .pricePerSeat(pricePerSeat)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
+
+        // Assign guides to the tour
+        Map<Guide.Role, TourGuide> tourGuides = new EnumMap<>(Guide.Role.class);
+        for (Guide.Role role : Guide.Role.values()) {
+            Guide selectedGuide = getRandomGuideByRole(availableGuides, role);
+            if (selectedGuide != null) {
+                TourGuide tourGuide = new TourGuide(tour, selectedGuide, role);
+                tourGuides.put(role, tourGuide);
+            }
+        }
+        tour.setTourGuides(tourGuides);
+
+        return tour;
+    }
+
+    private Guide getRandomGuideByRole(List<Guide> guides, Guide.Role role) {
+        List<Guide> guidesWithRole = guides.stream()
+                .filter(guide -> guide.getRole() == role)
+                .toList();
+        return guidesWithRole.isEmpty() ? null : guidesWithRole.get(random.nextInt(guidesWithRole.size()));
     }
 }
