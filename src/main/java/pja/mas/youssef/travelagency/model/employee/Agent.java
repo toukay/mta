@@ -40,6 +40,7 @@ public class Agent extends Employee {
     private String name;
 
     @NotNull(message = "Specialization is required")
+    @Enumerated(EnumType.STRING)
     private Specialization specialization;
 
     public enum Specialization {

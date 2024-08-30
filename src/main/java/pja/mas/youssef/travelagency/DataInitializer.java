@@ -42,7 +42,23 @@ public class DataInitializer {
     @EventListener
     public void atStart(ContextRefreshedEvent event) {
         LOG.info("DataInitializer.atStart");
-        initData();
+        if (isDatabaseEmpty()) {
+            initData();
+        } else {
+            LOG.info("Database is not empty, skipping data initialization");
+        }
+    }
+
+    private boolean isDatabaseEmpty() {
+        return individualRepository.count() == 0 &&
+                companyRepository.count() == 0 &&
+                agentRepository.count() == 0 &&
+                guideRepository.count() == 0 &&
+                tourRepository.count() == 0 &&
+                bookingRepository.count() == 0 &&
+                accommodationRepository.count() == 0 &&
+                travelTicketRepository.count() == 0 &&
+                eventRepository.count() == 0;
     }
 
     private void initData() {

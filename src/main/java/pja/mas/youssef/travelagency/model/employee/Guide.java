@@ -33,6 +33,7 @@ public class Guide extends Employee {
     private Set<String> languages = new HashSet<>();
 
     @NotNull(message = "Role is required")
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     public enum Role {

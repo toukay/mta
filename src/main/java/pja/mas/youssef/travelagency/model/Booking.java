@@ -60,6 +60,7 @@ public class Booking {
     private LocalDateTime bookingDate;
 
     @NotNull(message = "Booking start date is required")
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @NotNull(message = "number of people is required")

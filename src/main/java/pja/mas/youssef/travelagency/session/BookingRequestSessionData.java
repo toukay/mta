@@ -12,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequestSessionData implements Serializable {
-    public static final Long DEMO_CUSTOMER_ID = 2L;
+    public static final Long DEMO_CUSTOMER_ID = 3L;
 
     private Long customerId;
     private Long tourId;

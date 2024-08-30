@@ -1,5 +1,6 @@
 package pja.mas.youssef.travelagency.service;
 
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,8 @@ public class BookingService {
     private TourRepository tourRepository;
     @Autowired
     private AgentRepository agentRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @Transactional(readOnly = true)
     public List<BookingDTO> getAllBookings() {
@@ -62,6 +65,7 @@ public class BookingService {
                 .build();
 
         bookingRepository.save(booking);
+        entityManager.flush();
 
         return booking;
     }
@@ -77,6 +81,7 @@ public class BookingService {
 
         booking.setStatus(Booking.Status.REQUEST);
         bookingRepository.save(booking);
+        entityManager.flush();
     }
 
     @Transactional(readOnly = true)

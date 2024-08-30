@@ -32,6 +32,7 @@ public class Event {
     @ElementCollection
     @CollectionTable(name = "event_categories", joinColumns = @JoinColumn(name = "event_id"))
     @Builder.Default
+    @Enumerated(EnumType.STRING)
     private Set<Category> categories = new HashSet<>();
 
     @ElementCollection

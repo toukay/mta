@@ -33,7 +33,7 @@ public class Tour {
     private Set<Event> events = new HashSet<>();
 
     @OneToMany(mappedBy = "tour", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @MapKeyEnumerated(EnumType.STRING)
+    @MapKey(name = "role")
     @Builder.Default
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
