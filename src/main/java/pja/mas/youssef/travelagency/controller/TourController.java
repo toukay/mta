@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pja.mas.youssef.travelagency.dto.TourDTO;
 import pja.mas.youssef.travelagency.service.TourService;
+import pja.mas.youssef.travelagency.session.BookingRequestSessionData;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class TourController {
         model.addAttribute("tours", tours);
         return "pages/tours";
     }
+
     @GetMapping("/{id}")
     public String getTourById(@PathVariable Long id, Model model) {
         TourDTO tour = tourService.getTourById(id);

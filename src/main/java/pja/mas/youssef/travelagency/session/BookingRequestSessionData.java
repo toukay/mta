@@ -1,4 +1,4 @@
-package pja.mas.youssef.travelagency.controller;
+package pja.mas.youssef.travelagency.session;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

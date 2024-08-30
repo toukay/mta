@@ -11,6 +11,7 @@ import pja.mas.youssef.travelagency.service.BookingService;
 
 import jakarta.servlet.http.HttpSession;
 import pja.mas.youssef.travelagency.service.CustomerService;
+import pja.mas.youssef.travelagency.session.BookingRequestSessionData;
 
 import java.util.List;
 
@@ -90,25 +91,10 @@ public class BookingController {
         if (bookingDTO == null) {
             return "redirect:/bookings/drafts";
         }
-        BookingRequestSessionData bookingData = convertDTOToSessionData(bookingDTO);
+        BookingRequestSessionData bookingData = bookingService.convertDTOToSessionData(bookingDTO);
         session.setAttribute("bookingData", bookingData);
         model.addAttribute("bookingData", bookingData);
         model.addAttribute("bookingModelID", bookingDTO.getId());
         return "pages/booking-request-summary";
-    }
-
-    private BookingRequestSessionData convertDTOToSessionData(BookingDTO bookingDTO) {
-        return BookingRequestSessionData.builder()
-                .customerId(bookingDTO.getCustomerId())
-                .tourId(bookingDTO.getId())
-                .tourDestination(bookingDTO.getTourDestination())
-                .numberOfPeople(bookingDTO.getNumberOfPeople())
-                .emergencyContactName(bookingDTO.getEmergencyContact().split(" - ")[0])
-                .emergencyContactNumber(bookingDTO.getEmergencyContact().split(" - ")[1])
-                .isTravelInsuranceIncluded(bookingDTO.getIsTravelInsuranceIncluded())
-                .isPrivateBusIncluded(bookingDTO.getIsPrivateBusIncluded())
-                .isMealsIncluded(bookingDTO.getIsMealsIncluded())
-                .totalPrice(bookingDTO.getTotalPrice())
-                .build();
     }
 }

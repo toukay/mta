@@ -3,7 +3,7 @@ package pja.mas.youssef.travelagency.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pja.mas.youssef.travelagency.controller.BookingRequestSessionData;
+import pja.mas.youssef.travelagency.session.BookingRequestSessionData;
 import pja.mas.youssef.travelagency.dto.BookingAccommodationDTO;
 import pja.mas.youssef.travelagency.dto.BookingDTO;
 import pja.mas.youssef.travelagency.dto.TravelTicketDTO;
@@ -84,6 +84,21 @@ public class BookingService {
         return bookingRepository.findByIdAndStatus(id, Booking.Status.DRAFT)
                 .map(this::convertToDTO)
                 .orElse(null);
+    }
+
+    public BookingRequestSessionData convertDTOToSessionData(BookingDTO bookingDTO) {
+        return BookingRequestSessionData.builder()
+                .customerId(bookingDTO.getCustomerId())
+                .tourId(bookingDTO.getId())
+                .tourDestination(bookingDTO.getTourDestination())
+                .numberOfPeople(bookingDTO.getNumberOfPeople())
+                .emergencyContactName(bookingDTO.getEmergencyContact().split(" - ")[0])
+                .emergencyContactNumber(bookingDTO.getEmergencyContact().split(" - ")[1])
+                .isTravelInsuranceIncluded(bookingDTO.getIsTravelInsuranceIncluded())
+                .isPrivateBusIncluded(bookingDTO.getIsPrivateBusIncluded())
+                .isMealsIncluded(bookingDTO.getIsMealsIncluded())
+                .totalPrice(bookingDTO.getTotalPrice())
+                .build();
     }
 
     private BookingDTO convertToDTO(Booking booking) {
