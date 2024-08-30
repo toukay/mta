@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <h1 class="mb-4">Booking Extras</h1>
+    <form th:action="@{/bookings/create-new-request-summary}" th:object="${bookingData}" method="post">
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="isTravelInsuranceIncluded" th:field="*{isTravelInsuranceIncluded}">
+            <label class="form-check-label" for="isTravelInsuranceIncluded">Include Travel Insurance</label>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="isMealsIncluded" th:field="*{isMealsIncluded}">
+            <label class="form-check-label" for="isMealsIncluded">Include Meals</label>
+        </div>
+        <div class="mb-3 form-check" th:if="${isCustomerVIP}">
+            <input type="checkbox" class="form-check-input" id="isPrivateBusIncluded" th:field="*{isPrivateBusIncluded}">
+            <label class="form-check-label" for="isPrivateBusIncluded">Include Private Bus (VIP only)</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Booking</button>
+    </form>
+</section>
+</body>
+</html>

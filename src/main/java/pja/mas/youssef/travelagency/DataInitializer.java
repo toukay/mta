@@ -194,7 +194,7 @@ public class DataInitializer {
                 .bookingDate(LocalDateTime.now())
                 .status(Booking.Status.values()[random.nextInt(Booking.Status.values().length)])
                 .numberOfPeople(random.nextInt(1, 6))
-                .emergencyContact("123-456-" + random.nextInt(1000, 9999))
+                .emergencyContact("Jack - 123-456-" + random.nextInt(1000, 9999))
                 .isTravelInsuranceIncluded(random.nextBoolean())
                 .isPrivateBusIncluded(customer instanceof Individual ? ((Individual) customer).getIsVIP() && random.nextBoolean() : ((Company) customer).getIsVIP() && random.nextBoolean())
                 .isMealsIncluded(random.nextBoolean())

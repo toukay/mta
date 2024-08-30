@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0" th:text="${tour.destination}">Tour Destination</h1>
+        <form th:action="@{/tours/{id}/select(id=${tour.id}, destination=${tour.destination})}" method="post">
+            <button type="submit" class="btn btn-primary">Select This Tour</button>
+        </form>
+    </div>
+
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Tour Details</h5>
+            <p class="card-text" th:text="'Price per seat: $' + ${tour.pricePerSeat}">Price per seat</p>
+            <p class="card-text" th:text="'Start Date: ' + ${#temporals.format(tour.startDate, 'dd-MM-yyyy HH:mm')}">Start Date</p>
+            <p class="card-text" th:text="'End Date: ' + ${#temporals.format(tour.endDate, 'dd-MM-yyyy HH:mm')}">End Date</p>
+            <p class="card-text" th:text="'Current Activity: ' + ${tour.currentTourActivity}">Current Activity</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header" id="eventsHeader">
+            <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#eventsCollapse" aria-expanded="true" aria-controls="eventsCollapse">
+                    Events
+                </button>
+            </h5>
+        </div>
+
+        <div id="eventsCollapse" class="collapse show" aria-labelledby="eventsHeader">
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="event : ${tour.events}">
+                        <h6 th:text="${event.name}">Event Name</h6>
+                        <p>Categories:
+                            <span th:each="category : ${event.categories}" class="badge bg-primary me-1" th:text="${category}">Category</span>
+                        </p>
+                        <p>Attractions:
+                            <span th:each="attraction : ${event.attractions}" class="badge bg-secondary me-1" th:text="${attraction}">Attraction</span>
+                        </p>
+                        <p>Guests:
+                            <span th:each="guest : ${event.guests}" class="badge bg-info me-1" th:text="${guest}">Guest</span>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header" id="guidesHeader">
+            <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#guidesCollapse" aria-expanded="false" aria-controls="guidesCollapse">
+                    Guides
+                </button>
+            </h5>
+        </div>
+
+        <div id="guidesCollapse" class="collapse" aria-labelledby="guidesHeader">
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item" th:each="entry : ${tour.guides}">
+                        <h6 th:text="${entry.key}">Guide Role</h6>
+                        <p th:text="${entry.value.firstName + ' ' + entry.value.lastName}">Guide Name</p>
+                        <p>Languages:
+                            <span th:each="language : ${entry.value.languages}" class="badge bg-success me-1" th:text="${language}">Language</span>
+                        </p>
+                        <p th:text="'Branch: ' + ${entry.value.branchAddress}">Branch</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

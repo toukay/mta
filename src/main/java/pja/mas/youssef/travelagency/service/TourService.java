@@ -33,6 +33,12 @@ public class TourService {
     }
 
     @Transactional(readOnly = true)
+    public TourDTO getTourById(Long id) {
+        Tour tour = tourRepository.findByIdWithEvents(id);
+        return convertToDTO(tour);
+    }
+
+    @Transactional(readOnly = true)
     public List<Event> getEventsByTourId(Long tourId) {
         return eventRepository.findByTourId(tourId);
     }

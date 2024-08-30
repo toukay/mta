@@ -18,6 +18,8 @@ public class BookingDTO {
     @JsonProperty("Agent_id")
     private Long agentId;
     @JsonProperty("Tour_id")
+    private Long tourId;
+    private String tourDestination;
     private LocalDateTime bookingDate;
     private Booking.Status status;
     private Integer numberOfPeople;

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <h1 id="draft-bookings" class="mb-4">Draft Bookings</h1>
+
+    <a class="btn btn-primary float-end mb-3" th:href="@{/tours}">+ Create New Booking</a>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Creation Date</th>
+            <th>Tour Destination</th>
+            <th>Number of People</th>
+            <th>Total Price</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking : ${draftBookings}">
+            <td th:text="${booking.id}"></td>
+            <td th:text="${#temporals.format(booking.bookingDate, 'dd-MM-yyyy HH:mm')}"></td>
+            <td th:text="${booking.tourDestination}"></td>
+            <td th:text="${booking.numberOfPeople}"></td>
+            <td th:text="${#numbers.formatDecimal(booking.totalPrice, 1, 2)}"></td>
+            <td>
+                <a th:href="@{/bookings/submit/{id}(id=${booking.id})}" class="btn btn-primary btn-sm">Submit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

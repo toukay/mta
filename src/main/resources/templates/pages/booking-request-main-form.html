@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <h1 class="mb-4">Booking Request Form</h1>
+    <form th:action="@{/bookings/create-new-request-extras}" method="post" th:object="${bookingData}">
+        <div class="mb-3">
+            <label for="numberOfPeople" class="form-label">Number of People</label>
+            <input type="number" class="form-control" id="numberOfPeople" th:field="*{numberOfPeople}"
+                   min="1" max="10" required>
+        </div>
+        <div class="mb-3">
+            <label for="emergencyContactName" class="form-label">Emergency Contact Name</label>
+            <input type="text" class="form-control" id="emergencyContactName" th:field="*{emergencyContactName}" required>
+        </div>
+        <div class="mb-3">
+            <label for="emergencyContactNumber" class="form-label">Emergency Contact Number</label>
+            <input type="tel" class="form-control" id="emergencyContactNumber" th:field="*{emergencyContactNumber}" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Continue</button>
+    </form>
+</section>
+</body>
+</html>

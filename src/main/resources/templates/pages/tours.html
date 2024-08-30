@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <h1 class="mb-4">Tours</h1>
+    <div th:if="${not #lists.isEmpty(tours)}">
+        <div class="list-group">
+            <a th:href="@{'/tours/' + ${tour.id}}" class="list-group-item list-group-item-action" th:each="tour : ${tours}">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1" th:text="${tour.destination}">Destination</h5>
+                    <small th:text="${#temporals.format(tour.startDate, 'dd-MM-yyyy')} + ' to ' + ${#temporals.format(tour.endDate, 'dd-MM-yyyy')}">Dates</small>
+                </div>
+                <p class="mb-1" th:text="${'Price per seat: $' + tour.pricePerSeat}">Price</p>
+            </a>
+        </div>
+    </div>
+    <div th:if="${#lists.isEmpty(tours)}" class="alert alert-info" role="alert">
+        No tours available
+    </div>
+</section>
+</body>
+</html>

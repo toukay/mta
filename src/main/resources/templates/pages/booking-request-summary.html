@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="layouts/main :: html(content=~{::section})">
+<body>
+<section class="container mt-4">
+    <h2 class="mb-4 text-center">Booking Request Summary</h2>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-borderless">
+                <tbody>
+                <tr>
+                    <th scope="row" class="w-50">Tour:</th>
+                    <td><span th:text="${bookingData.tourDestination}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Number of People:</th>
+                    <td><span th:text="${bookingData.numberOfPeople}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Emergency Contact:</th>
+                    <td><span th:text="${bookingData.emergencyContactName + ' - ' + bookingData.emergencyContactNumber}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Travel Insurance:</th>
+                    <td><span th:text="${bookingData.isTravelInsuranceIncluded ? 'Yes' : 'No'}"></span></td>
+                </tr>
+                <tr>
+                    <th scope="row">Meals Included:</th>
+                    <td><span th:text="${bookingData.isMealsIncluded ? 'Yes' : 'No'}"></span></td>
+                </tr>
+                <tr th:if="${bookingData.isPrivateBusIncluded != null}">
+                    <th scope="row">Private Bus:</th>
+                    <td><span th:text="${bookingData.isPrivateBusIncluded ? 'Yes' : 'No'}"></span></td>
+                </tr>
+                <tr th:if="${bookingData.isPrivateBusIncluded != null}">
+                    <th scope="row">Total Price:</th>
+                    <td><span th:text="${bookingData.totalPrice}"></span></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-center gap-3">
+                <form th:action="@{/bookings/save-booking-request}" method="post">
+                    <button type="submit" class="btn btn-outline-secondary">Save as Draft</button>
+                </form>
+                <form th:action="@{/bookings/forward-booking-request}" method="post">
+                    <input type="hidden" name="bookingId" th:value="${bookingModelID}" />
+                    <button type="submit" class="btn btn-primary">Forward Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

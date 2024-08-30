@@ -3,6 +3,7 @@ package pja.mas.youssef.travelagency.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pja.mas.youssef.travelagency.controller.BookingRequestSessionData;
 import pja.mas.youssef.travelagency.dto.BookingAccommodationDTO;
 import pja.mas.youssef.travelagency.dto.BookingDTO;
 import pja.mas.youssef.travelagency.dto.TravelTicketDTO;
@@ -10,7 +11,11 @@ import pja.mas.youssef.travelagency.model.Booking;
 import pja.mas.youssef.travelagency.model.BookingAccommodation;
 import pja.mas.youssef.travelagency.model.TravelTicket;
 import pja.mas.youssef.travelagency.repository.BookingRepository;
+import pja.mas.youssef.travelagency.repository.TourRepository;
+import pja.mas.youssef.travelagency.repository.customer.CustomerRepository;
+import pja.mas.youssef.travelagency.repository.employee.AgentRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,6 +24,12 @@ import java.util.stream.Collectors;
 public class BookingService {
     @Autowired
     private BookingRepository bookingRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private TourRepository tourRepository;
+    @Autowired
+    private AgentRepository agentRepository;
 
     @Transactional(readOnly = true)
     public List<BookingDTO> getAllBookings() {
@@ -27,11 +38,61 @@ public class BookingService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<BookingDTO> getDraftBookingsForCustomer(Long customerId) {
+        return bookingRepository.findByCustomerIdAndStatus(customerId, Booking.Status.DRAFT)
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Booking createDraftBooking(BookingRequestSessionData bookingData) {
+        Booking booking = Booking.builder()
+                .customer(customerRepository.findById(bookingData.getCustomerId()).orElseThrow())
+                .tour(tourRepository.findById(bookingData.getTourId()).orElseThrow())
+                .agent(agentRepository.findById(1L).orElseThrow())
+                .status(Booking.Status.DRAFT)
+                .bookingDate(LocalDateTime.now())
+                .numberOfPeople(bookingData.getNumberOfPeople())
+                .emergencyContact(bookingData.getEmergencyContactName() + " - " + bookingData.getEmergencyContactNumber())
+                .isTravelInsuranceIncluded(bookingData.getIsTravelInsuranceIncluded())
+                .isPrivateBusIncluded(bookingData.getIsPrivateBusIncluded())
+                .isMealsIncluded(bookingData.getIsMealsIncluded())
+                .build();
+
+        bookingRepository.save(booking);
+
+        return booking;
+    }
+
+    @Transactional
+    public void forwardBooking(Long bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (booking.getStatus() != Booking.Status.DRAFT) {
+            throw new IllegalStateException("Only DRAFT bookings can be forwarded");
+        }
+
+        booking.setStatus(Booking.Status.REQUEST);
+        bookingRepository.save(booking);
+    }
+
+    @Transactional(readOnly = true)
+    public BookingDTO getDraftBookingById(Long id) {
+        return bookingRepository.findByIdAndStatus(id, Booking.Status.DRAFT)
+                .map(this::convertToDTO)
+                .orElse(null);
+    }
+
     private BookingDTO convertToDTO(Booking booking) {
         return BookingDTO.builder()
                 .id(booking.getId())
                 .customerId(booking.getCustomer().getId())
                 .agentId(booking.getAgent().getId())
+                .tourId(booking.getTour().getId())
+                .tourDestination(booking.getTour().getDestination())
                 .bookingDate(booking.getBookingDate())
                 .status(booking.getStatus())
                 .numberOfPeople(booking.getNumberOfPeople())
