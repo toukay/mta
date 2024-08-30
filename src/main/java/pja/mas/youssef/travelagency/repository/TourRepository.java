@@ -9,10 +9,4 @@ import java.util.List;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
     List<Tour> findByDestination(String destination);
-
-    @Query("SELECT t FROM Tour t LEFT JOIN FETCH t.events")
-    List<Tour> findAllWithEvents();
-
-    @Query("SELECT t FROM Tour t LEFT JOIN FETCH t.events WHERE t.id = :id")
-    Tour findByIdWithEvents(@Param("id") Long id);
 }

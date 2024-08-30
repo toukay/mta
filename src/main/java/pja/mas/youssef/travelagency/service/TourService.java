@@ -27,14 +27,15 @@ public class TourService {
 
     @Transactional(readOnly = true)
     public List<TourDTO> getAllTours() {
-        return tourRepository.findAllWithEvents().stream()
+        return tourRepository.findAll().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public TourDTO getTourById(Long id) {
-        Tour tour = tourRepository.findByIdWithEvents(id);
+        Tour tour = tourRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tour not found"));
         return convertToDTO(tour);
     }
 
