@@ -1,10 +1,8 @@
 package pja.mas.youssef.travelagency.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import pja.mas.youssef.travelagency.model.customer.Customer;
 
 import java.time.LocalDate;
 
